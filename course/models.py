@@ -4,7 +4,8 @@ from django.db import models
 class Teacher(models.Model):
     name = models.CharField(max_length=100, null=False, blank=False)
     link = models.URLField(null=True, blank=True)
-    image = models.ImageField(upload_to='teacher/', blank=False, null=False)
+    # image = models.ImageField(upload_to='teacher/', blank=False, null=False)
+    image = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return f'ID: {self.pk}, Name: {self.name}'
@@ -24,6 +25,9 @@ class Book(models.Model):
     link = models.URLField(null=True, blank=True)
     image = models.ImageField(upload_to='book/', blank=False, null=False)
 
+    def __str__(self):
+        return f'ID: {self.pk}, Name: {self.name}'
+
 
 class Course(models.Model):
     TYPE_CHOICES = [
@@ -35,12 +39,12 @@ class Course(models.Model):
     image = models.ImageField(upload_to='course/', blank=False, null=False)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     semester = models.CharField(max_length=6, null=False, blank=False)
-    year = models.IntegerField(null=False, blank=False, max_length=4)
+    year = models.IntegerField(null=False, blank=False)
     status = models.CharField(max_length=8, choices=TYPE_CHOICES)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'ID: {self.pk}, Name: {self.name}, Semester: {self.year} {self.year}, Teacher: {self.teacher}'
+        return f'ID: {self.pk}, Name: {self.name}, Semester: {self.semester} {self.year}, Instructor: {self.teacher.name}'
 
 
 class Announcement(models.Model):
@@ -68,9 +72,9 @@ class Schedule(models.Model):
         ('Thursday', 'Thursday'),
         ('Friday', 'Friday'),
     ]
-    type = models.CharField(choices=TYPE_CHOICES, null=False, blank=False)
+    type = models.CharField(choices=TYPE_CHOICES, null=False, blank=False, max_length=10)
     date = models.DateField(null=False, blank=False)
-    day = models.CharField(null=False, blank=False, choices=DAY_CHOICES)
+    day = models.CharField(null=False, blank=False, choices=DAY_CHOICES, max_length=10)
     text = models.TextField(null=False, blank=False, max_length=60)
     slide = models.URLField(null=True, blank=True)
     ta_note = models.URLField(null=True, blank=True)
@@ -102,7 +106,7 @@ class CourseMaterial(models.Model):
 
 class Assignment(models.Model):
     pdf_link = models.URLField(null=False, blank=False)
-    assignment_number = models.IntegerField(max_length=2, null=False, blank=False)
+    assignment_number = models.IntegerField(null=False, blank=False)
     name = models.CharField(max_length=50, null=False, blank=False)
     attachment_link = models.URLField(null=True, blank=True)
     solution_link = models.URLField(null=True, blank=True)
