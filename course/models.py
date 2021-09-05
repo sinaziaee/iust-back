@@ -100,9 +100,9 @@ class Lecture(models.Model):
 
 
 class CourseMaterial(models.Model):
-    text = models.CharField(max_length=100, null=True, blank=True)
-    link = models.URLField(null=True, blank=True)
-    link_text = models.CharField(max_length=100, null=True, blank=True)
+    text = models.CharField(max_length=100, null=True, blank=True, default='')
+    link = models.URLField(null=True, blank=True, default='')
+    link_text = models.CharField(max_length=100, null=True, blank=True, default='')
     course = models.ForeignKey(Course, null=False, blank=False, on_delete=models.CASCADE)
 
     def __str__(self):

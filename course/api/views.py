@@ -14,9 +14,6 @@ def home(request):
     try:
         course = Course.objects.get(short_name=name)
         serializer = CourseSerializer(course)
-        print('-'*100)
-        print(serializer.data)
-        print('-'*100)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         print(e)
@@ -31,7 +28,6 @@ def schedule(request):
     try:
         course = Course.objects.get(short_name=name)
         schedules = Schedule.objects.filter(course=course).values()
-        print(schedules)
         serializer = ScheduleSerializer(data=schedules, many=True)
         return Response(serializer.initial_data, status=status.HTTP_200_OK)
     except Exception as e:
@@ -46,9 +42,9 @@ def lecture(request):
         return Response('Bad course name', status=status.HTTP_400_BAD_REQUEST)
     try:
         course = Course.objects.get(short_name=name)
-        lectures = Lecture.objects.filter(course=course)
+        lectures = Lecture.objects.filter(course=course).values()
         serializer = LectureSerializer(data=lectures, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.initial_data, status=status.HTTP_200_OK)
     except Exception as e:
         print(e)
         return Response('Course not found', status=status.HTTP_400_BAD_REQUEST)
@@ -61,9 +57,9 @@ def assignment(request):
         return Response('Bad course name', status=status.HTTP_400_BAD_REQUEST)
     try:
         course = Course.objects.get(short_name=name)
-        assignments = Assignment.objects.filter(course=course)
+        assignments = Assignment.objects.filter(course=course).values()
         serializer = AssignmentSerializer(data=assignments, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.initial_data, status=status.HTTP_200_OK)
     except Exception as e:
         print(e)
         return Response('Course not found', status=status.HTTP_400_BAD_REQUEST)
@@ -81,9 +77,9 @@ def course_material(request):
         return Response('Bad course name', status=status.HTTP_400_BAD_REQUEST)
     try:
         course = Course.objects.get(short_name=name)
-        course_materials = CourseMaterial.objects.filter(course=course)
+        course_materials = CourseMaterial.objects.filter(course=course).values()
         serializer = CourseMaterialSerializer(data=course_materials, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.initial_data, status=status.HTTP_200_OK)
     except Exception as e:
         print(e)
         return Response('Course not found', status=status.HTTP_400_BAD_REQUEST)
