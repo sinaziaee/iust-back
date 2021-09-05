@@ -1,34 +1,89 @@
-from course import models
+from course.models import *
 from django.shortcuts import render, HttpResponse
+from rest_framework.response import Response
+from rest_framework.decorators import permission_classes, api_view
+from rest_framework import status
+from course.api.serializer import *
 
 
+@api_view(['GET', ])
 def home(request):
-    get = request.GET
-    name = get.get('course')
-    print(name)
+    name = request.GET.get('course')
+    if name is None:
+        return Response('Bad course name', status=status.HTTP_400_BAD_REQUEST)
     try:
-        each = models.Course.objects.get(name=name)
-        print(each)
+        course = Course.objects.get(short_name=name)
+        serializer = CourseSerializer(course)
+        print('-'*100)
+        print(serializer.data)
+        print('-'*100)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         print(e)
-    return HttpResponse('hello')
+        return Response('Course not found', status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET', ])
 def schedule(request):
-    return HttpResponse('hello')
+    name = request.GET.get('course')
+    if name is None:
+        return Response('Bad course name', status=status.HTTP_400_BAD_REQUEST)
+    try:
+        course = Course.objects.get(short_name=name)
+        schedules = Schedule.objects.filter(course=course).values()
+        print(schedules)
+        serializer = ScheduleSerializer(data=schedules, many=True)
+        return Response(serializer.initial_data, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(e)
+        return Response('Course not found', status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET', ])
 def lecture(request):
-    return None
+    name = request.GET.get('course')
+    if name is None:
+        return Response('Bad course name', status=status.HTTP_400_BAD_REQUEST)
+    try:
+        course = Course.objects.get(short_name=name)
+        lectures = Lecture.objects.filter(course=course)
+        serializer = LectureSerializer(data=lectures, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(e)
+        return Response('Course not found', status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET', ])
 def assignment(request):
-    return None
+    name = request.GET.get('course')
+    if name is None:
+        return Response('Bad course name', status=status.HTTP_400_BAD_REQUEST)
+    try:
+        course = Course.objects.get(short_name=name)
+        assignments = Assignment.objects.filter(course=course)
+        serializer = AssignmentSerializer(data=assignments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(e)
+        return Response('Course not found', status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET', ])
 def final_project(request):
     return None
 
 
+@api_view(['GET', ])
 def course_material(request):
-    return None
+    name = request.GET.get('course')
+    if name is None:
+        return Response('Bad course name', status=status.HTTP_400_BAD_REQUEST)
+    try:
+        course = Course.objects.get(short_name=name)
+        course_materials = CourseMaterial.objects.filter(course=course)
+        serializer = CourseMaterialSerializer(data=course_materials, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(e)
+        return Response('Course not found', status=status.HTTP_400_BAD_REQUEST)

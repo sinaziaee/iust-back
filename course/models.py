@@ -35,9 +35,11 @@ class Course(models.Model):
         ('Open', 'Open'),
     ]
     name = models.CharField(max_length=50, null=False, blank=False)
+    short_name = models.CharField(max_length=10, null=False, blank=False)
     description = models.TextField(null=False, blank=False)
     image = models.ImageField(upload_to='course/', blank=False, null=False)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    assistants = models.ManyToManyField(TeacherAssistant, blank=True)
     semester = models.CharField(max_length=6, null=False, blank=False)
     year = models.IntegerField(null=False, blank=False)
     status = models.CharField(max_length=8, choices=TYPE_CHOICES)
@@ -51,9 +53,10 @@ class Announcement(models.Model):
     text = models.TextField(null=False, blank=False)
     link = models.URLField(null=True, blank=True)
     link_text = models.CharField(null=True, blank=True, max_length=20)
+    course = models.ForeignKey(Course, null=False, blank=False, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'ID: {self.pk}'
+        return f'ID: {self.pk}, Course: {self.course.name}'
 
 
 class Schedule(models.Model):
@@ -72,6 +75,7 @@ class Schedule(models.Model):
         ('Thursday', 'Thursday'),
         ('Friday', 'Friday'),
     ]
+    course = models.ForeignKey(Course, null=False, blank=False, on_delete=models.CASCADE)
     type = models.CharField(choices=TYPE_CHOICES, null=False, blank=False, max_length=10)
     date = models.DateField(null=False, blank=False)
     day = models.CharField(null=False, blank=False, choices=DAY_CHOICES, max_length=10)
@@ -89,9 +93,10 @@ class Lecture(models.Model):
     image = models.ImageField(upload_to='lecture/', blank=False, null=False)
     note = models.URLField(blank=True, null=True)
     slide = models.URLField(null=True, blank=True)
+    course = models.ForeignKey(Course, null=False, blank=False, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'ID: {self.pk}, Name: {self.name}'
+        return f'ID: {self.pk}, Name: {self.name}, Course: {self.course.name}'
 
 
 class CourseMaterial(models.Model):
@@ -111,6 +116,7 @@ class Assignment(models.Model):
     attachment_link = models.URLField(null=True, blank=True)
     solution_link = models.URLField(null=True, blank=True)
     due_date = models.DateTimeField(null=False, blank=False)
+    course = models.ForeignKey(Course, null=False, blank=False, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'ID: {self.pk}, Name: {self.name}, Due: {self.due_date}'

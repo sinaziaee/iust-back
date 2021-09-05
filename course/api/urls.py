@@ -12,6 +12,3 @@ urlpatterns = [
     path('final_project/', views.final_project, name='final_project'),  # {host}/{course}/api/final_project/
     path('course_material/', views.course_material, name='course_material'),  # {host}/{course}/api/course_material/
 ]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_URL)
