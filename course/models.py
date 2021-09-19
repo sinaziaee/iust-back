@@ -4,8 +4,7 @@ from django.db import models
 class Teacher(models.Model):
     name = models.CharField(max_length=100, null=False, blank=False)
     link = models.URLField(null=True, blank=True)
-    # image = models.ImageField(upload_to='teacher/', blank=False, null=False)
-    image = models.URLField(null=True, blank=True)
+    image = models.ImageField(upload_to='teacher/', blank=True, null=True)
 
     def __str__(self):
         return f'ID: {self.pk}, Name: {self.name}'
@@ -14,7 +13,7 @@ class Teacher(models.Model):
 class TeacherAssistant(models.Model):
     name = models.CharField(max_length=100, null=False, blank=False)
     link = models.URLField(null=True, blank=True)
-    image = models.ImageField(upload_to='teacher/', blank=True, null=True)
+    image = models.ImageField(upload_to='teacher_assistant/', blank=True, null=True)
 
     def __str__(self):
         return f'ID: {self.pk}, Name: {self.name}'
