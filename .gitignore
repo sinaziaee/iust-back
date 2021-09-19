@@ -8,4 +8,5 @@ media/result/
 __pycache__/
 *.py[cod]
 *$py.class
+media/
 db.sqlite3

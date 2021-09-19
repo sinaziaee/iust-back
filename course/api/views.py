@@ -7,6 +7,18 @@ from course.api.serializer import *
 
 
 @api_view(['GET', ])
+def intro(request):
+    try:
+        course = Course.objects.all()
+        print(course)
+        serializer = CourseSerializer(course, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(e)
+        return Response(f'Exception found {e}', status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', ])
 def home(request):
     name = request.GET.get('course')
     if name is None:
