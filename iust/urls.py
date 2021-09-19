@@ -29,6 +29,6 @@ def flutter_redirect(request, resource):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('course.urls')),
-    path('flutter_web_app/', lambda r: flutter_redirect(r, 'index.html')),
-    path('flutter_web_app/<path:resource>', flutter_redirect),
+    path('courses/', lambda r: flutter_redirect(r, 'index.html')),
+    path('courses/<path:resource>', flutter_redirect),
 ]
